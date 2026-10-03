@@ -5,10 +5,10 @@ import java.time.LocalDateTime;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.ridelink.accountservice.dto.LoginRequest;
-import com.ridelink.accountservice.dto.LoginResponse;
-import com.ridelink.accountservice.dto.RegisterRequest;
-import com.ridelink.accountservice.dto.UserResponse;
+import com.ridelink.accountservice.dto.request.LoginRequest;
+import com.ridelink.accountservice.dto.response.LoginResponse;
+import com.ridelink.accountservice.dto.request.RegisterRequest;
+import com.ridelink.accountservice.dto.response.UserResponse;
 
 import com.ridelink.accountservice.exception.BadRequestException;
 

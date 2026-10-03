@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
-import com.ridelink.accountservice.dto.ChangePasswordRequest;
-import com.ridelink.accountservice.dto.UpdateProfileRequest;
-import com.ridelink.accountservice.dto.UserResponse;
+import com.ridelink.accountservice.dto.request.ChangePasswordRequest;
+import com.ridelink.accountservice.dto.request.UpdateProfileRequest;
+import com.ridelink.accountservice.dto.response.UserResponse;
 
 import com.ridelink.accountservice.service.AccountService;
 

@@ -1,4 +1,4 @@
-package com.ridelink.accountservice.dto;
+package com.ridelink.accountservice.dto.response;
 
 import com.ridelink.accountservice.model.User;
 

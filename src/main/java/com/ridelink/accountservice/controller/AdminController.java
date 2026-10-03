@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
-import com.ridelink.accountservice.dto.RoleUpdateRequest;
-import com.ridelink.accountservice.dto.StatusUpdateRequest;
-import com.ridelink.accountservice.dto.UserResponse;
+import com.ridelink.accountservice.dto.request.RoleUpdateRequest;
+import com.ridelink.accountservice.dto.request.StatusUpdateRequest;
+import com.ridelink.accountservice.dto.response.UserResponse;
 
 import com.ridelink.accountservice.service.AccountService;
 

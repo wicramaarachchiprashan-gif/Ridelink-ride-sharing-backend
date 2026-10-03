@@ -7,10 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 
-import com.ridelink.accountservice.dto.LoginRequest;
-import com.ridelink.accountservice.dto.LoginResponse;
-import com.ridelink.accountservice.dto.RegisterRequest;
-import com.ridelink.accountservice.dto.UserResponse;
+import com.ridelink.accountservice.dto.request.LoginRequest;
+import com.ridelink.accountservice.dto.response.LoginResponse;
+import com.ridelink.accountservice.dto.request.RegisterRequest;
+import com.ridelink.accountservice.dto.response.UserResponse;
 
 import com.ridelink.accountservice.service.AuthService;
 

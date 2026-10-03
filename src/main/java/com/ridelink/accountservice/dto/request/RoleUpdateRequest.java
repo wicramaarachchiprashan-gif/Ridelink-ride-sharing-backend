@@ -1,4 +1,4 @@
-package com.ridelink.accountservice.dto;
+package com.ridelink.accountservice.dto.request;
 
 import com.ridelink.accountservice.model.Role;
 

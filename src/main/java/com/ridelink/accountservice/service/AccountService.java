@@ -5,9 +5,9 @@ import java.time.LocalDateTime;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.ridelink.accountservice.dto.ChangePasswordRequest;
-import com.ridelink.accountservice.dto.UpdateProfileRequest;
-import com.ridelink.accountservice.dto.UserResponse;
+import com.ridelink.accountservice.dto.request.ChangePasswordRequest;
+import com.ridelink.accountservice.dto.request.UpdateProfileRequest;
+import com.ridelink.accountservice.dto.response.UserResponse;
 
 import com.ridelink.accountservice.exception.BadRequestException;
 import com.ridelink.accountservice.exception.ResourceNotFoundException;
