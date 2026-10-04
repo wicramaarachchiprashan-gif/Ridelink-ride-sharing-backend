@@ -1,0 +1,461 @@
+{
+	"info": {
+		"_postman_id": "12345678-1234-1234-1234-123456789012",
+		"name": "RideLink Fare & Payment Service",
+		"description": "Postman collection for Fare & Payment Service (Member 4)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "1. Positive Tests",
+			"item": [
+				{
+					"name": "P1 Calculate Fare - Valid",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8084/api/v1/payments/fare/65abc123rideId456",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"v1",
+								"payments",
+								"fare",
+								"65abc123rideId456"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "P2 Process Payment - Valid",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"rideId\": \"65abc123rideId456\",\n  \"riderId\": \"65def456riderId789\",\n  \"paymentMethod\": \"CREDIT_CARD\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8084/api/v1/payments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"v1",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "P3 Get Payment By Ride ID - Existing",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8084/api/v1/payments/ride/65abc123rideId456",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"v1",
+								"payments",
+								"ride",
+								"65abc123rideId456"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "P4 Get Payments By Rider ID - Existing",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8084/api/v1/payments/rider/65def456riderId789",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"v1",
+								"payments",
+								"rider",
+								"65def456riderId789"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "2. Negative Tests",
+			"item": [
+				{
+					"name": "N1 Calculate Fare - Missing Required Data",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8084/api/v1/payments/fare/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"v1",
+								"payments",
+								"fare",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "N2 Calculate Fare - Invalid Value",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8084/api/v1/payments/fare/invalid_format_ride",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"v1",
+								"payments",
+								"fare",
+								"invalid_format_ride"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "N3 Calculate Fare - Empty Body",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{}"
+						},
+						"url": {
+							"raw": "http://localhost:8084/api/v1/payments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"v1",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "N4 Process Payment - Missing Required Data",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"riderId\": \"65def456riderId789\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8084/api/v1/payments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"v1",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "N5 Process Payment - Invalid Amount",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"rideId\": \"65abc123rideId456\",\n  \"riderId\": \"65def456riderId789\",\n  \"paymentMethod\": \"UNKNOWN_METHOD\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8084/api/v1/payments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"v1",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "N6 Process Payment - Duplicate Payment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"rideId\": \"65abc123rideId456\",\n  \"riderId\": \"65def456riderId789\",\n  \"paymentMethod\": \"CASH\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:8084/api/v1/payments",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"v1",
+								"payments"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "N7 Get Payment - Non-existing Ride ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8084/api/v1/payments/ride/9999999999",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"v1",
+								"payments",
+								"ride",
+								"9999999999"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "N8 Get Payments - Non-existing Rider ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{jwt_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8084/api/v1/payments/rider/9999999999",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"v1",
+								"payments",
+								"rider",
+								"9999999999"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "N9 Unauthorized - No Token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8084/api/v1/payments/ride/65abc123rideId456",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"v1",
+								"payments",
+								"ride",
+								"65abc123rideId456"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "N10 Unauthorized - Invalid Token",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer invalid.token.value",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8084/api/v1/payments/ride/65abc123rideId456",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8084",
+							"path": [
+								"api",
+								"v1",
+								"payments",
+								"ride",
+								"65abc123rideId456"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "jwt_token",
+			"value": "YOUR_JWT_TOKEN_HERE"
+		}
+	]
+}
