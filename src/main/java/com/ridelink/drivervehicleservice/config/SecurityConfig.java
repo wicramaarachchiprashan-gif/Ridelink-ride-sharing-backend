@@ -31,7 +31,16 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints
-                        .requestMatchers("/actuator/health", "/actuator/info").permitAll()
+                        
+                        .requestMatchers(
+                            "/v3/api-docs/**",
+                            "/swagger-ui/**",
+                            "/swagger-ui.html",
+                            "/actuator/health",
+                            "/actuator/info",
+                            "/actuator/env"
+                        ).permitAll()
+
                         // Interservice or read endpoints that other microservices (like Ride Management) can query
                         .requestMatchers("/api/v1/drivers/available").permitAll()
                         // All other operations require authentication
