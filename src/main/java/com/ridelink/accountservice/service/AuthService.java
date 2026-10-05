@@ -44,9 +44,6 @@ public class AuthService {
                 this.jwtService = jwtService;
         }
 
-        /*
-         * Register a passenger or driver.
-         */
         public UserResponse register(
                         RegisterRequest request) {
 
@@ -54,20 +51,12 @@ public class AuthService {
                                 .trim()
                                 .toLowerCase();
 
-                /*
-                 * Check duplicate email.
-                 */
                 if (userRepository.existsByEmail(email)) {
 
                         throw new BadRequestException(
                                         "An account with this email already exists.");
                 }
 
-                /*
-                 * ADMIN cannot be created through public registration.
-                 *
-                 * Admin is created by DataInitializer.
-                 */
                 if (request.getRole() == Role.ADMIN) {
 
                         throw new BadRequestException(
@@ -87,9 +76,6 @@ public class AuthService {
                 user.setPhone(
                                 request.getPhone().trim());
 
-                /*
-                 * Hash password before saving.
-                 */
                 user.setPassword(
                                 passwordEncoder.encode(
                                                 request.getPassword()));
@@ -111,9 +97,6 @@ public class AuthService {
                 return new UserResponse(savedUser);
         }
 
-        /*
-         * Login.
-         */
         public LoginResponse login(
                         LoginRequest request) {
 
@@ -121,27 +104,17 @@ public class AuthService {
                                 .trim()
                                 .toLowerCase();
 
-                /*
-                 * Find user.
-                 */
                 User user = userRepository
                                 .findByEmail(email)
                                 .orElseThrow(() -> new BadRequestException(
                                                 "Invalid email or password."));
 
-                /*
-                 * Check account status.
-                 */
                 if (user.getStatus() != AccountStatus.ACTIVE) {
 
                         throw new BadRequestException(
                                         "This account is not active.");
                 }
 
-                /*
-                 * Compare entered password with
-                 * stored BCrypt password.
-                 */
                 boolean passwordMatches = passwordEncoder.matches(
                                 request.getPassword(),
                                 user.getPassword());
@@ -152,9 +125,6 @@ public class AuthService {
                                         "Invalid email or password.");
                 }
 
-                /*
-                 * Generate JWT.
-                 */
                 String token = jwtService.generateToken(user);
 
                 return new LoginResponse(
