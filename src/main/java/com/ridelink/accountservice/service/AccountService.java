@@ -16,9 +16,6 @@ import com.ridelink.accountservice.model.User;
 
 import com.ridelink.accountservice.repository.UserRepository;
 
-/*
- * Handles logged-in user's account operations.
- */
 @Service
 public class AccountService {
 
@@ -35,9 +32,6 @@ public class AccountService {
                 this.passwordEncoder = passwordEncoder;
         }
 
-        /*
-         * Get the currently logged-in user.
-         */
         public UserResponse getMyProfile(
                         String email) {
 
@@ -46,9 +40,6 @@ public class AccountService {
                 return new UserResponse(user);
         }
 
-        /*
-         * Update the logged-in user's profile.
-         */
         public UserResponse updateMyProfile(
                         String email,
                         UpdateProfileRequest request) {
@@ -72,18 +63,12 @@ public class AccountService {
                 return new UserResponse(savedUser);
         }
 
-        /*
-         * Change the logged-in user's password.
-         */
         public void changePassword(
                         String email,
                         ChangePasswordRequest request) {
 
                 User user = findUserByEmail(email);
 
-                /*
-                 * Check current password.
-                 */
                 boolean currentPasswordCorrect = passwordEncoder.matches(
                                 request.getCurrentPassword(),
                                 user.getPassword());
@@ -94,9 +79,6 @@ public class AccountService {
                                         "Current password is incorrect.");
                 }
 
-                /*
-                 * Make sure the new password is different.
-                 */
                 if (passwordEncoder.matches(
                                 request.getNewPassword(),
                                 user.getPassword())) {
@@ -105,9 +87,6 @@ public class AccountService {
                                         "New password must be different from the current password.");
                 }
 
-                /*
-                 * Hash and save the new password.
-                 */
                 user.setPassword(
                                 passwordEncoder.encode(
                                                 request.getNewPassword()));
@@ -118,9 +97,6 @@ public class AccountService {
                 userRepository.save(user);
         }
 
-        /*
-         * Find user by email.
-         */
         public User findUserByEmail(
                         String email) {
 
@@ -130,10 +106,6 @@ public class AccountService {
                                                 "User account was not found."));
         }
 
-        /*
-         * ADMIN:
-         * Return all user accounts.
-         */
         public java.util.List<UserResponse> getAllAccounts() {
 
                 return userRepository
@@ -143,10 +115,6 @@ public class AccountService {
                                 .toList();
         }
 
-        /*
-         * ADMIN:
-         * Find one account by MongoDB ID.
-         */
         public UserResponse getAccountById(
                         String id) {
 
@@ -158,10 +126,6 @@ public class AccountService {
                 return new UserResponse(user);
         }
 
-        /*
-         * ADMIN:
-         * Change account status.
-         */
         public UserResponse updateAccountStatus(
                         String id,
                         com.ridelink.accountservice.model.AccountStatus status) {
@@ -181,10 +145,6 @@ public class AccountService {
                 return new UserResponse(savedUser);
         }
 
-        /*
-         * ADMIN:
-         * Change account role.
-         */
         public UserResponse updateAccountRole(
                         String id,
                         com.ridelink.accountservice.model.Role role) {

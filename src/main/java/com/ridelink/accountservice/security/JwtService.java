@@ -13,9 +13,6 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
-/*
- * Responsible for creating and reading JWT tokens.
- */
 @Service
 public class JwtService {
 
@@ -27,18 +24,12 @@ public class JwtService {
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.expiration}") long expiration) {
 
-        /*
-         * The secret must be long enough for HMAC SHA-256.
-         */
         this.signingKey = Keys.hmacShaKeyFor(
                 secret.getBytes(StandardCharsets.UTF_8));
 
         this.expiration = expiration;
     }
 
-    /*
-     * Creates a JWT after successful login.
-     */
     public String generateToken(User user) {
 
         Date now = new Date();
@@ -48,13 +39,10 @@ public class JwtService {
 
         return Jwts.builder()
 
-                // Subject identifies the logged-in user.
                 .subject(user.getEmail())
 
-                // Store user ID in the token.
                 .claim("userId", user.getId())
 
-                // Store role in the token.
                 .claim("role", user.getRole().name())
 
                 .issuedAt(now)
@@ -66,18 +54,12 @@ public class JwtService {
                 .compact();
     }
 
-    /*
-     * Extracts the email/username from JWT.
-     */
     public String extractEmail(String token) {
 
         return extractClaims(token)
                 .getSubject();
     }
 
-    /*
-     * Validates the token signature and expiration.
-     */
     public boolean isTokenValid(String token) {
 
         try {
@@ -92,9 +74,6 @@ public class JwtService {
         }
     }
 
-    /*
-     * Reads all JWT claims.
-     */
     private Claims extractClaims(String token) {
 
         return Jwts.parser()

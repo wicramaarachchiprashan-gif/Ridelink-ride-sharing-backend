@@ -45,12 +45,6 @@ public class JwtAuthenticationFilter
 
         String authorizationHeader = request.getHeader("Authorization");
 
-        /*
-         * No Authorization header.
-         *
-         * We simply continue.
-         * Spring Security will later reject protected endpoints.
-         */
         if (authorizationHeader == null
                 || !authorizationHeader.startsWith("Bearer ")) {
 
@@ -59,16 +53,10 @@ public class JwtAuthenticationFilter
             return;
         }
 
-        /*
-         * Remove "Bearer " from the beginning.
-         */
         String token = authorizationHeader.substring(7);
 
         try {
 
-            /*
-             * Validate JWT.
-             */
             if (!jwtService.isTokenValid(token)) {
 
                 filterChain.doFilter(request, response);
@@ -76,17 +64,8 @@ public class JwtAuthenticationFilter
                 return;
             }
 
-            /*
-             * Get email from JWT.
-             */
             String email = jwtService.extractEmail(token);
 
-            /*
-             * Find current user from MongoDB.
-             *
-             * This also means a suspended/deactivated user
-             * can be blocked immediately.
-             */
             User user = userRepository
                     .findByEmail(email)
                     .orElse(null);
@@ -98,9 +77,6 @@ public class JwtAuthenticationFilter
                 return;
             }
 
-            /*
-             * Only ACTIVE users are allowed to continue.
-             */
             if (!user.getStatus().name().equals("ACTIVE")) {
 
                 filterChain.doFilter(request, response);
@@ -108,39 +84,21 @@ public class JwtAuthenticationFilter
                 return;
             }
 
-            /*
-             * Convert our application role into
-             * Spring Security's role format.
-             *
-             * ADMIN becomes ROLE_ADMIN.
-             */
+            
             SimpleGrantedAuthority authority = new SimpleGrantedAuthority(
                     "ROLE_" + user.getRole().name());
 
-            /*
-             * Create authenticated user information.
-             */
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     user.getEmail(),
                     null,
                     java.util.List.of(authority));
 
-            /*
-             * Tell Spring Security that this request
-             * belongs to this authenticated user.
-             */
             SecurityContextHolder
                     .getContext()
                     .setAuthentication(authentication);
 
         } catch (Exception exception) {
 
-            /*
-             * Invalid token.
-             *
-             * We don't crash the server.
-             * Spring Security will reject protected APIs.
-             */
         }
 
         filterChain.doFilter(request, response);
