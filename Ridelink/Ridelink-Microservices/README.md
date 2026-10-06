@@ -68,13 +68,3 @@ Then:
 
 `docker compose up --build`
 
-## Important changes from the original ZIP
-
-- Each logical module is now a separate Spring Boot Maven module and process.
-- Driver/Vehicle now has its own `DriverVehicleServiceApplication` entry point.
-- Ports are separated: 8081/8082/8083/8084.
-- Interservice URLs point to the correct services rather than all using 8081.
-- Ride and Payment Mongo configuration now uses environment-configurable standard MongoDB URIs instead of hard-coded localhost clients.
-- Driver -> Account validation forwards the incoming Authorization header.
-- Account Service now provides authenticated `GET /api/v1/accounts/{id}` for Driver Service validation.
-- API Gateway on 8080 forwards frontend requests to the correct service.
