@@ -1,0 +1,63 @@
+services:
+  mongodb:
+    image: mongo:8
+    container_name: ridelink-mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - ridelink-mongo-data:/data/db
+
+  account-service:
+    build: ./account-service
+    environment:
+      SERVER_PORT: 8081
+      MONGODB_URI: mongodb://mongodb:27017/ridelink_account_db
+      JWT_SECRET: ${JWT_SECRET:-RideLinkDevelopmentSecretKey2026ForAuthentication123456789}
+    depends_on: [mongodb]
+    ports: ["8081:8081"]
+
+  driver-vehicle-service:
+    build: ./driver-vehicle-service
+    environment:
+      SERVER_PORT: 8082
+      MONGODB_HOST: mongodb
+      MONGODB_PORT: 27017
+      MONGODB_DATABASE: ridelink_driver_vehicle_db
+      ACCOUNT_SERVICE_URL: http://account-service:8081
+      JWT_SECRET: ${JWT_SECRET:-RideLinkDevelopmentSecretKey2026ForAuthentication123456789}
+    depends_on: [mongodb, account-service]
+    ports: ["8082:8082"]
+
+  ride-management-service:
+    build: ./ride-management-service
+    environment:
+      SERVER_PORT: 8083
+      MONGODB_URI: mongodb://mongodb:27017/ridelink_ride_db
+      DRIVER_SERVICE_URL: http://driver-vehicle-service:8082
+      JWT_SECRET: ${JWT_SECRET:-RideLinkDevelopmentSecretKey2026ForAuthentication123456789}
+    depends_on: [mongodb, driver-vehicle-service]
+    ports: ["8083:8083"]
+
+  fare-payment-service:
+    build: ./fare-payment-service
+    environment:
+      SERVER_PORT: 8084
+      MONGODB_URI: mongodb://mongodb:27017/ridelink_fare_payment_db
+      RIDE_SERVICE_URL: http://ride-management-service:8083
+      JWT_SECRET: ${JWT_SECRET:-RideLinkDevelopmentSecretKey2026ForAuthentication123456789}
+    depends_on: [mongodb, ride-management-service]
+    ports: ["8084:8084"]
+
+  api-gateway:
+    build: ./api-gateway
+    environment:
+      SERVER_PORT: 8080
+      ACCOUNT_SERVICE_URL: http://account-service:8081
+      DRIVER_SERVICE_URL: http://driver-vehicle-service:8082
+      RIDE_SERVICE_URL: http://ride-management-service:8083
+      PAYMENT_SERVICE_URL: http://fare-payment-service:8084
+    depends_on: [account-service, driver-vehicle-service, ride-management-service, fare-payment-service]
+    ports: ["8080:8080"]
+
+volumes:
+  ridelink-mongo-data:
