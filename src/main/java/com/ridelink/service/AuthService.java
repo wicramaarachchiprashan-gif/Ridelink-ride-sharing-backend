@@ -1,0 +1,135 @@
+package com.ridelink.service;
+
+import java.time.LocalDateTime;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.ridelink.dto.request.LoginRequest;
+import com.ridelink.dto.response.LoginResponse;
+import com.ridelink.dto.request.RegisterRequest;
+import com.ridelink.dto.response.UserResponse;
+
+import com.ridelink.exception.BadRequestException;
+
+import com.ridelink.model.AccountStatus;
+import com.ridelink.model.Role;
+import com.ridelink.model.User;
+
+import com.ridelink.repository.UserRepository;
+
+import com.ridelink.security.JwtService;
+
+/*
+ * Handles registration and login business logic.
+ */
+@Service
+public class AuthService {
+
+        private final UserRepository userRepository;
+
+        private final PasswordEncoder passwordEncoder;
+
+        private final JwtService jwtService;
+
+        public AuthService(
+                        UserRepository userRepository,
+                        PasswordEncoder passwordEncoder,
+                        JwtService jwtService) {
+
+                this.userRepository = userRepository;
+
+                this.passwordEncoder = passwordEncoder;
+
+                this.jwtService = jwtService;
+        }
+
+        public UserResponse register(
+                        RegisterRequest request) {
+
+                String email = request.getEmail()
+                                .trim()
+                                .toLowerCase();
+
+                if (userRepository.existsByEmail(email)) {
+
+                        throw new BadRequestException(
+                                        "An account with this email already exists.");
+                }
+
+                if (request.getRole() == Role.ADMIN) {
+
+                        throw new BadRequestException(
+                                        "ADMIN accounts cannot be created through public registration.");
+                }
+
+                User user = new User();
+
+                user.setFirstName(
+                                request.getFirstName().trim());
+
+                user.setLastName(
+                                request.getLastName().trim());
+
+                user.setEmail(email);
+
+                user.setPhone(
+                                request.getPhone().trim());
+
+                user.setPassword(
+                                passwordEncoder.encode(
+                                                request.getPassword()));
+
+                user.setRole(
+                                request.getRole());
+
+                user.setStatus(
+                                AccountStatus.ACTIVE);
+
+                LocalDateTime now = LocalDateTime.now();
+
+                user.setCreatedAt(now);
+
+                user.setUpdatedAt(now);
+
+                User savedUser = userRepository.save(user);
+
+                return new UserResponse(savedUser);
+        }
+
+        public LoginResponse login(
+                        LoginRequest request) {
+
+                String email = request.getEmail()
+                                .trim()
+                                .toLowerCase();
+
+                User user = userRepository
+                                .findByEmail(email)
+                                .orElseThrow(() -> new BadRequestException(
+                                                "Invalid email or password."));
+
+                if (user.getStatus() != AccountStatus.ACTIVE) {
+
+                        throw new BadRequestException(
+                                        "This account is not active.");
+                }
+
+                boolean passwordMatches = passwordEncoder.matches(
+                                request.getPassword(),
+                                user.getPassword());
+
+                if (!passwordMatches) {
+
+                        throw new BadRequestException(
+                                        "Invalid email or password.");
+                }
+
+                String token = jwtService.generateToken(user);
+
+                return new LoginResponse(
+                                token,
+                                jwtService.getExpiration(),
+                                new UserResponse(user));
+        }
+}
